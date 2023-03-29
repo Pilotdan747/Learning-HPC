@@ -53,6 +53,7 @@ int main() {
     
     double start = omp_get_wtime();
 
+#pragma omp parallel for schedule(guided)
     for (int i = 0; i < DIM1; i++) {
         planets_SV_JD(3, launchT[i] + epoch, earthState);
 
@@ -63,17 +64,21 @@ int main() {
 
             lambert(REarth, RMars, transT[j]*day2sec, muSun, 0, Vs);
             
-            VinfE[i][j] = norm(vinf(VEarth, Vs[0]));
-            VinfM[i][j] = norm(vinf(VMars, Vs[1]));
+            double tempVinfE = norm(vinf(VEarth, Vs[0]));
+            double tempVinfM = norm(vinf(VMars, Vs[1]));
+
+            VinfE[i][j] = tempVinfE;
+            VinfM[i][j] = tempVinfM;
         }
     }
 
     double end = omp_get_wtime();
 
     printf("Time to Run: %f seconds\n", end - start);
+    
 
     FILE *out;
-    out = fopen("SerialOut.txt", "w");
+    out = fopen("ParallelOut.txt", "w");
 
     for (int i = 0; i < DIM1; i++) {
         for (int j = 0; j < DIM2; j++) {
