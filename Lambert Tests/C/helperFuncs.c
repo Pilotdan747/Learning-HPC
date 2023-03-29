@@ -147,6 +147,12 @@ void lambert(struct vector R1, struct vector R2, double dT, double mu, int k, st
 
     V[0] = v1;
     V[1] = v2;
+
+    if (printFlag && isnan(v2.x)) {
+        printf("f: %f\n", f);
+        printf("g: %f\n", g);
+        printf("gDot: %f\n", gDot);
+    }
 }
 
 double julianDate(int y, int m, int d, int hr, int min, int s) {

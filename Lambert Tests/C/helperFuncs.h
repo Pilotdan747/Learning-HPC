@@ -11,6 +11,10 @@ struct vector {
     double z;
 };
 
+#ifndef printFlag
+int printFlag = 1;
+#endif
+
 double norm(struct vector v);
 
 struct vector cross(struct vector a, struct vector b);
