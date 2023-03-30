@@ -53,9 +53,11 @@ int main() {
     
     double start = omp_get_wtime();
 
-#pragma omp parallel for schedule(guided)
+#pragma omp parallel for schedule(guided) private(earthState, marsState, REarth, VEarth, RMars, VMars, Vs)
     for (int i = 0; i < DIM1; i++) {
         planets_SV_JD(3, launchT[i] + epoch, earthState);
+        REarth = earthState[0];
+        VEarth = earthState[1];
 
         for (int j = 0; j < DIM2; j++) {
             planets_SV_JD(4, transT[j] + launchT[i] + epoch, marsState);
@@ -67,8 +69,11 @@ int main() {
             double tempVinfE = norm(vinf(VEarth, Vs[0]));
             double tempVinfM = norm(vinf(VMars, Vs[1]));
 
-            VinfE[i][j] = tempVinfE;
-            VinfM[i][j] = tempVinfM;
+            #pragma omp critical
+                VinfE[i][j] = tempVinfE;
+
+            #pragma omp critical
+                VinfM[i][j] = tempVinfM;
         }
     }
 

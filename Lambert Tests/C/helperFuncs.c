@@ -95,6 +95,12 @@ void lambert(struct vector R1, struct vector R2, double dT, double mu, int k, st
         S = 1.0/6.0 - Zold/120 + pow(Zold, 2)/5040;
         y = r1 + r2 + A*(Zold*S - 1)/sqrt(C);
 
+        if (y < 0) {
+            biSect = 1;
+            break;
+        }
+            
+
         F = pow(y/C, 3.0/2.0)*S + A*sqrt(y) - sqrt(mu)*dT;
         FPri = pow(y/C, 3.0/2.0)*(1/(2*Zold)*(C - 3*S/(2*C)) + 3*pow(S, 2)/(4*C)) + A/8*(3*S/C*sqrt(y) + A*sqrt(C/y));
 
@@ -114,6 +120,7 @@ void lambert(struct vector R1, struct vector R2, double dT, double mu, int k, st
         Zu = 4*pow(pi, 2);
         Z = 0;
 
+        int biSectCount = 0;
         while (fabs(F) >= 0.001) {
             C = 0.5 - Z/24 + pow(Z, 2)/720 - pow(Z, 3)/40320;
             S = 1.0/6.0 - Z/120 + pow(Z, 2)/5040 - pow(Z, 3)/362880;
@@ -128,7 +135,13 @@ void lambert(struct vector R1, struct vector R2, double dT, double mu, int k, st
             }
 
             Z = (Zl + Zu)/2;
+
+            biSectCount++;
+            if (biSectCount > 1000)
+                break;
         }
+
+        Zold = Z;
     }
 
     y = r1 + r2 + A*(Zold*S - 1)/sqrt(C);
@@ -148,10 +161,15 @@ void lambert(struct vector R1, struct vector R2, double dT, double mu, int k, st
     V[0] = v1;
     V[1] = v2;
 
-    if (printFlag && isnan(v2.x)) {
+    if (isnan(v2.x)) {
         printf("f: %f\n", f);
         printf("g: %f\n", g);
         printf("gDot: %f\n", gDot);
+        printf("C: %f\n", C);
+        printf("S: %f\n", S);
+        printf("A: %f\n", A);
+        printf("y: %f\n", y);
+        printf("Zold: %f\n\n", Zold);
     }
 }
 

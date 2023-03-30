@@ -53,6 +53,7 @@ int main() {
     
     double start = omp_get_wtime();
 
+    int printFlag = 1;
     for (int i = 0; i < DIM1; i++) {
         planets_SV_JD(3, launchT[i] + epoch, earthState);
         REarth = earthState[0];
@@ -67,16 +68,6 @@ int main() {
 
             VinfE[i][j] = norm(vinf(VEarth, Vs[0]));
             VinfM[i][j] = norm(vinf(VMars, Vs[1]));
-
-            if (isnan(VinfE[i][j]) && printFlag) {
-                printf("REarth: %f   %f   %f\n", REarth.x, REarth.y, REarth.z);
-                printf("RMars: %f   %f   %f\n", RMars.x, RMars.y, RMars.z);
-                printf("VEarth: %f   %f   %f\n", VEarth.x, VEarth.y, VEarth.z);
-                printf("VMars: %f   %f   %f\n", VMars.x, VMars.y, VMars.z);
-                printf("V1: %f   %f   %f\n", Vs[0].x, Vs[0].y, Vs[0].z);
-                printf("V2: %f   %f   %f\n", Vs[1].x, Vs[1].y, Vs[1].z);
-                printFlag = 0;
-            }
         }
     }
 

@@ -19,5 +19,10 @@ int main() {
         }
     }
 
+    double test = fabs(sqrt(-1.0));
+    
+    printf("Test: %f\n", test);
+    printf("Logic: %d\n", test > 0.0001);
+
     return 0;
 }
