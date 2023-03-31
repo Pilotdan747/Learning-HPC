@@ -137,8 +137,10 @@ void lambert(struct vector R1, struct vector R2, double dT, double mu, int k, st
             Z = (Zl + Zu)/2;
 
             biSectCount++;
-            if (biSectCount > 1000)
+            if (biSectCount > 1000) {
+                printf("Didn't Converge F=%f\n", F);
                 break;
+            }
         }
 
         Zold = Z;

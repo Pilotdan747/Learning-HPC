@@ -4,6 +4,7 @@
 #include <omp.h>
 
 #include "helperFuncs.h"
+#include "lambert.h"
 
 #define sec2day 1/24.0/3600.0
 #define day2sec 24*3600
@@ -64,10 +65,17 @@ int main() {
             RMars = marsState[0];
             VMars = marsState[1];
 
-            lambert(REarth, RMars, transT[j]*day2sec, muSun, 0, Vs);
+            lambert_battin(REarth, RMars, transT[j]*day2sec, muSun, 0, Vs);
 
             VinfE[i][j] = norm(vinf(VEarth, Vs[0]));
             VinfM[i][j] = norm(vinf(VMars, Vs[1]));
+
+            if (i == 0 && j == 0) {
+                printf("VinfE: %f\n", VinfE[i][j]);
+                printf("REarth X: %f Y: %f Z: %f\n", REarth.x, REarth.y, REarth.z);
+                printf("VEarth X: %f Y: %f Z: %f\n", VEarth.x, VEarth.y, VEarth.z);
+                printf("V1 X: %f Y: %f Z: %f\n", Vs[0].x, Vs[0].y, Vs[0].z);
+            }
         }
     }
 
