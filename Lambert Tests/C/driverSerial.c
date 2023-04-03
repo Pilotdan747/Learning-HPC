@@ -55,6 +55,7 @@ int main() {
     double start = omp_get_wtime();
 
     int printFlag = 1;
+    int count = 0;
     for (int i = 0; i < DIM1; i++) {
         planets_SV_JD(3, launchT[i] + epoch, earthState);
         REarth = earthState[0];
@@ -70,17 +71,20 @@ int main() {
             VinfE[i][j] = norm(vinf(VEarth, Vs[0]));
             VinfM[i][j] = norm(vinf(VMars, Vs[1]));
 
-            if (i == 0 && j == 0) {
+            if (isnan(VinfE[i][j])) {
+                printf("i: %d   j: %d\n", i, j);
                 printf("VinfE: %f\n", VinfE[i][j]);
                 printf("REarth X: %f Y: %f Z: %f\n", REarth.x, REarth.y, REarth.z);
                 printf("VEarth X: %f Y: %f Z: %f\n", VEarth.x, VEarth.y, VEarth.z);
                 printf("V1 X: %f Y: %f Z: %f\n", Vs[0].x, Vs[0].y, Vs[0].z);
+                count++;
             }
         }
     }
 
     double end = omp_get_wtime();
 
+    printf("Count: %d\n", count);
     printf("Time to Run: %f seconds\n", end - start);
 
     FILE *out;
