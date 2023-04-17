@@ -88,7 +88,7 @@ int main() {
     printf("Time to Run: %f seconds\n", end - start);
 
     FILE *out;
-    out = fopen("SerialOut.txt", "w");
+    out = fopen("VinfEC.txt", "w");
 
     for (int i = 0; i < DIM1; i++) {
         for (int j = 0; j < DIM2; j++) {

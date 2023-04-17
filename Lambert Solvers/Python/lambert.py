@@ -29,6 +29,9 @@ def battin_xi(x):
     # Stage 2
     D = 5 + n + 1*D0
     if (abs(D) < tiny):
+        D = tiny
+    C = 5 + n + 1/C0
+    if (abs(C) < tiny):
         C = tiny
     D = 1/D
     Del = C*D
@@ -41,7 +44,7 @@ def battin_xi(x):
     D = 1 + 9/7*n*D0
     if (abs(D) < tiny):
         D = tiny
-    C = 1 + 9/7*n*D
+    C = 1 + 9/7*n/C0
     if (abs(C) < tiny):
         C = tiny
     D = 1/D
@@ -56,7 +59,7 @@ def battin_xi(x):
         D = 1 + c*n*D0
         if (abs(D) < tiny):
             D = tiny
-        C = 1 + c*n*D0
+        C = 1 + c*n/C0
         if (abs(C) < tiny):
             C = tiny
         D = 1/D
@@ -173,24 +176,20 @@ def lambert_battin(R1, R2, dt, mu, dir):
 
     for i in range(0, 100):
         z = battin_xi(x)
-        den = (1 + 2*x + l)*(4*x + x*(3+x))
+        den = (1 + 2*x + l)*(4*x + z*(3+x))
         h1 = (l + x)**2*(1 + 3*x + z)/den
         h2 = m*(x - l + z)/den
         B = 0.25*27*h2/(1 + h1)**3
         u = 0.5*B/(1 + csqrt(1 + B))
         K = battin_K(u)
         y = (1 + h1)/3*(2 + csqrt(1 + B)/(1 + 2*u*K**2))
-        x = sqrt(0.25*(1 - l)**2 + m/y**2) - 0.5*(1 + l)
+        x = csqrt(0.25*(1 - l)**2 + m/y**2) - 0.5*(1 + l)
         if (abs(x - x0) < 1e-14):
-            print(x)
-            print(x0)
-            print(abs(x - x0))
-            print(i)
             break
         else:
             x0 = x
 
-    a = mu*dt**2/16/r0p**2/x/y**2
+    a = mu*dt**2/16/r0p**2/x.real/y.real**2
 
     if (a > 0):
         b = 2*asin(sqrt(0.5*(s-c)/a))
@@ -203,7 +202,8 @@ def lambert_battin(R1, R2, dt, mu, dir):
         if (dt > tmin):
             ae = 2*pi - ae
         
-        dE = ae - B
+        dE = ae - b
+
         f = 1 - a/r1*(1 - cos(dE))
         g = dt - sqrt(a**3/mu)*(dE - sin(dE))
         gdot = 1 - a/r2*(1 - cos(dE))
