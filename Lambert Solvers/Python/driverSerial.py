@@ -21,8 +21,8 @@ Tsynodic = 1/abs(1/TE - 1/TM)
 launchT = linspace(0, Tsynodic, dim1)/24/3600
 transT = linspace(90, 200, dim2)
 
-VinfE = MAT.empty(dim1, dim2)
-VinfM = MAT.empty(dim1, dim2)
+VinfE = MAT.empty((dim1, dim2))
+VinfM = MAT.empty((dim1, dim2))
 for i, lT in enumerate(launchT):
     for j, tT in enumerate(transT):
         REarth, VEarth = planets_SV_JD(3, lT + epoch)
